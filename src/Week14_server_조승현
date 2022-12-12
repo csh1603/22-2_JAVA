@@ -1,0 +1,77 @@
+import java.io.PrintWriter;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Week14_server_조승현 {
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("============");
+		System.out.println("전공: 사이버보안전공");
+		System.out.println("학번: 2171081");
+		System.out.println("성명: 조승현");
+		System.out.println("============");
+		
+		ServerSocket serverSocket = null; //요청이 들어오는 socket을 받기 위한 serverSocket
+		Socket socket = null; //요청이 들어온 후 연결하는 socket
+		int i = 0, sum = 0; //i는 사용자가 입력한 횟수만큼 반복하기 위한 변수, sum은 사용자가 입력한 수를 저장하는 변수
+
+		try {
+			serverSocket = new ServerSocket(9003); //9003번 포트 열기
+			socket = serverSocket.accept(); //들어오는 요청 받기
+			
+			Scanner in = new Scanner(socket.getInputStream()); //socket을 통해 들어오는 문자들을 받는 scanner, in
+			PrintWriter out = new PrintWriter(socket.getOutputStream()); //socket을 통해 사용자의 문자를 보내기 위한 Printwriter, out
+			
+			//들어오는 문자열을 strIn으로 저장하고 출력
+			String strIn = in.nextLine();
+			System.out.println(strIn);
+			
+			//몇 번 입력할 것인지 사용자 콘솔창에 출력하기
+			out.println("How many numbers?");
+			out.flush();
+			
+			//사용자가 횟수를 입력하면 그 숫자를 time 변수에 저장 
+			String time = in.nextLine();
+			System.out.println(time);
+			//String type -> int type
+			int n = Integer.parseInt(time);
+			
+			//몇번 입력하라고 사용자 콘솔창에 출력
+			out.println("Input " + n + " numbers");
+			out.flush();
+			
+			//n번이 될 때까지: 사용자가 입력한 횟수가 될 때까지 반복
+			while (i < n) {
+				//String type, num변수에 입력받아서 int 타입으로 변화시키고 계속 더해주기
+				String num = in.nextLine();
+				sum += Integer.parseInt(num);
+				i++;
+			}
+			
+			//사용자의 커널에 합계와 평균을 출력
+			out.println("Sum: " + sum);
+			out.flush();
+			out.println("Avg: " + (double)sum/n);
+			out.flush();
+
+			System.out.println("Service finished.");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			try {
+				//소켓을 닫아줌
+				socket.close();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+			try {
+				//서버소켓을 닫아줌
+				serverSocket.close();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+	}
+
+}
