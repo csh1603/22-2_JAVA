@@ -1,0 +1,73 @@
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Scanner;
+
+public class Week14_client_조승현 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		System.out.println("============");
+		System.out.println("전공: 사이버보안전공");
+		System.out.println("학번: 2171081");
+		System.out.println("성명: 조승현");
+		System.out.println("============");
+		
+		//server와 연결하기 위한 socket 선언
+		Socket socket = null;
+		//입력 횟수를 의미하는 i 변수 선언
+		int i=0;
+		
+		try {
+			//server의 ip와 port를 알아내고 (cmd창에서 ipconfig) 연결
+			socket = new Socket("192.168.178.48", 9003);
+			
+			//키보드로 입력받기 위한 Scanner, scanner
+			Scanner scanner = new Scanner(System.in);
+			//server로부터 오는 문자열을 인식하는 Scanner, in
+			Scanner in = new Scanner(socket.getInputStream());
+			//server 콘솔창에 출력하기 위한 PrintWriter, out
+			PrintWriter out = new PrintWriter(socket.getOutputStream());
+			
+			//client의 콘솔창에 Hello 출력
+			out.println("Hello?");
+			out.flush();
+			
+			//client로 부터 오는 첫번째 문장을 strIn에 저장하고 출력
+			String strIn = in.nextLine();
+			System.out.println(strIn);
+			
+			//횟수를 의미하는 변수 n을 keyboard 입력을 통해 server로 전달
+			int n = scanner.nextInt();
+			out.println(n);
+			out.flush();
+			
+			//client로 부터 오는 두번째 문장을 sec에 저장하고 출력
+			String sec = in.nextLine();
+			System.out.println(sec);
+			
+			//입력한 횟수가 될 때까지 keyboard 입력을 통해 정수를 입력하고 server측으로 그 정수를 전달 
+			while (i<n) {
+				out.println(scanner.nextInt());
+				i++;
+				out.flush();
+			}
+			
+			//server측에서 계산한 sum과 avg를 전달받아 출력
+			String sum = in.nextLine();
+			System.out.println(sum);
+			String avg = in.nextLine();
+			System.out.println(avg);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		} finally {
+			try {
+				//소켓을 닫아줌
+				socket.close();
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+
+	}
+
+}
